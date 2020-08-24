@@ -83,17 +83,9 @@ function(_git_find_closest_git_dir _start_dir _git_dir_var)
         PARENT_SCOPE)
 endfunction()
 
-function(get_git_head_revision _refspecvar _hashvar)
-    _git_find_closest_git_dir("${CMAKE_CURRENT_SOURCE_DIR}" GIT_DIR)
+function(get_git_head_revision _refspecvar _hashvar _gitdir)
+    _git_find_closest_git_dir("${_gitdir}" GIT_DIR)
 
-    if(NOT "${GIT_DIR}" STREQUAL "")
-        file(RELATIVE_PATH _relative_to_source_dir "${CMAKE_SOURCE_DIR}"
-             "${GIT_DIR}")
-        if("${_relative_to_source_dir}" MATCHES "[.][.]")
-            # We've gone above the CMake root dir.
-            set(GIT_DIR "")
-        endif()
-    endif()
     if("${GIT_DIR}" STREQUAL "")
         set(${_refspecvar}
             "GITDIR-NOTFOUND"
